@@ -11,10 +11,11 @@ import javax.persistence.*;
 public class Judge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    private int qualifiedNumber;
+    private String detail;
     @ManyToOne
     private CourseAndDerection course;
     @ManyToOne
     private Student student;
-    private int qualifiedNumber;
-    private String detail;
 }
