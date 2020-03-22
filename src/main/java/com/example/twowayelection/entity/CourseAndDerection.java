@@ -1,10 +1,11 @@
-package com.example.twowayelection.Entity;
+package com.example.twowayelection.entity;
 
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -19,4 +20,9 @@ public class CourseAndDerection {
     private  float gradeLimit;
     @OneToMany(mappedBy = "course")
     private List<Judge> judges;
+    @ManyToOne
+    private Teacher teacher;
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+            insertable = false,updatable = false)
+    private LocalDateTime updateTime;
 }
