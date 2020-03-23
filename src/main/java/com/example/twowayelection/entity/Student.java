@@ -16,7 +16,7 @@ public class Student {
     private Integer stuID;
     private String stuName;
     private float grade;
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student" )//及时加载,fetch = FetchType.EAGER
     private List<Judge> judges;
     @Column(columnDefinition = "timestamp default current_timestamp",
             insertable = false,updatable = false)
