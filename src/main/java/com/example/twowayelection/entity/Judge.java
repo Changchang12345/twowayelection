@@ -13,7 +13,7 @@ public class Judge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer qualifiedNumber;
+    private  Double grade;
     private String detail;
     @ManyToOne
     private CourseAndDerection course;

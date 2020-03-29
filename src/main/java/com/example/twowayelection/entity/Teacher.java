@@ -16,6 +16,7 @@ public class Teacher {
     private Integer teacherID;
     private String teacherName;
     private String password;
+    private Integer qualifiedNumber;
     private Integer totalNumber;
     @OneToMany(mappedBy = "teacher")
     private List<CourseAndDerection> courses;

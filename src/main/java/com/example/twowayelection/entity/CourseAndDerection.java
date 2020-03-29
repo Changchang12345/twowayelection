@@ -14,10 +14,10 @@ import java.util.List;
 public class CourseAndDerection {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int courseID;
+    private Integer courseID;
     private String courseName;
-    private float weight;
-    private  float gradeLimit;
+    private Double weight;
+    private  Double gradeLimit;
     @OneToMany(mappedBy = "course")
     private List<Judge> judges;
     @ManyToOne

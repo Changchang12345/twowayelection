@@ -15,8 +15,7 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer stuID;
     private String stuName;
-    private float grade;
-    @OneToMany(mappedBy = "student" )//及时加载,fetch = FetchType.EAGER
+    @OneToMany(mappedBy = "student")// ,fetch = FetchType.EAGER)//及时加载
     private List<Judge> judges;
     @Column(columnDefinition = "timestamp default current_timestamp",
             insertable = false,updatable = false)
@@ -25,4 +24,6 @@ public class Student {
             insertable = false,
             updatable = false)
     private LocalDateTime updateTime;
+    private Integer stuNumber;
+    private Double averageGrade;
 }

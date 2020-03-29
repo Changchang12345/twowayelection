@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -39,7 +40,38 @@ public class ProjectService {
     public Student getStudent(int id){
         return studentRepository.findById(id).orElse(null);
     }
+    public CourseAndDerection getCourse(int id){
+        return courseRepository.findById(id).orElse(null);
+    }
+    public Judge getJudge(int id){
+        return judgeRepository.findById(id).orElse(null);
+    }
     public Teacher getTeacher(int id){
         return teacherRepository.findById(id).orElse(null);
+    }
+    public void setAverageGrade(Integer stuID){
+        Integer i = 1;
+        Integer j = 0;
+        Integer flag = 0;
+        Double ans=0.0;
+        while (true){
+            if(getJudge(i).getStudent().getStuID()==stuID){
+                if(getJudge(i).getGrade()>=getJudge(i).getCourse().getGradeLimit()){
+                    flag = 1;
+                }
+                else {flag = 0;}
+            }
+            i++;
+            if(getJudge(i)==null&&flag==1){
+              List<Judge> judges = judgeRepository.list1(stuID);
+              for(j=0;j<judges.size();j++){
+                  Double g = judges.get(j).getGrade();
+                  g = g*getCourse(i).getWeight();
+                  ans =ans+g;
+              }
+            }
+            if(getJudge(i)==null)break;
+        }
+        getStudent(stuID).setAverageGrade(ans);
     }
 }
