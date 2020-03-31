@@ -39,6 +39,11 @@ private CourseRepository courseRepository;
     s1.setStuNumber(2017224398);
     projectService.addStudent(s1);
 
+    Student s2 = new Student();
+    s2.setStuName("十爷");
+    s2.setStuNumber(2017224390);
+    projectService.addStudent(s2);
+
     Teacher t1 = new Teacher();
     t1.setTeacherName("BO");
     t1.setPassword("12345");
@@ -86,16 +91,32 @@ private CourseRepository courseRepository;
     j2.setStudent(s1);
     j2.setGrade(87.00);
     projectService.addJudge(j2);
+
+    Judge j3 = new Judge();
+    j3.setCourse(c1);
+    j3.setDetail("十爷的Java程序设计课");
+    j3.setStudent(s2);
+    j3.setGrade(69.00);
+    projectService.addJudge(j3);
 }
     @Test
     public void testAverage(){
-    while(true){
         Integer i = 1;
-            projectService.setAverageGrade(i);
+    while(true){
+         projectService.setAverageGrade(i);
             i++;
             if(projectService.getStudent(i)==null)break;
     }
     }
+    @Test
+    public void testQualifiedNumber(){
+    projectService.setQualifiedNumber(1);
+    }
+    @Test
+    public void testQualifiedStu(){
+    projectService.setQualifiedStudent(1).forEach(u->log.debug(u.getStuName()));
+    }
+
     @Test
     public void testFetch(){
     log.debug(projectService.getStudent(1).getStuName());
