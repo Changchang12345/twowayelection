@@ -1,23 +1,25 @@
 package com.example.twowayelection.service;
 
-import com.example.twowayelection.entity.CourseAndDerection;
-import com.example.twowayelection.entity.Judge;
-import com.example.twowayelection.entity.Student;
-import com.example.twowayelection.entity.Teacher;
-import com.example.twowayelection.repository.CourseRepository;
-import com.example.twowayelection.repository.JudgeRepository;
-import com.example.twowayelection.repository.StudentRepository;
-import com.example.twowayelection.repository.TeacherRepository;
+import com.example.twowayelection.entity.*;
+import com.example.twowayelection.repository.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
-
+import java.util.Map;
+@Getter
+@Setter
 @Service
 @Transactional
 public class ProjectService {
+    @Autowired
+    PasswordEncoder encoder;
     @Autowired
     StudentRepository studentRepository;
     @Autowired
@@ -26,6 +28,26 @@ public class ProjectService {
     JudgeRepository judgeRepository;
     @Autowired
     CourseRepository courseRepository;
+    @Autowired
+    AdminRepository adminRepository;
+    //新建教师
+    private Map<Integer,Teacher> map = createTeacher();
+    private Map createTeacher(){
+        Teacher t = new Teacher();
+        t.setTeacherNumber(2000);
+        t.setPassword("$2a$10$WJcH4PHTOrHEeL/0.v0NauYALumYPfFDJxd6bl4JhpgoXU5GR1v3u");
+        return Map.of(t.getTeacherNumber(),t);
+    }
+    //新建管理员
+    private Map<Integer,Admin> map2 = createAdmin();
+    private Map createAdmin(){
+        Admin a = new Admin();
+        a.setAdminNumber(1990);
+        a.setPassword("$2a$10$WJcH4PHTOrHEeL/0.v0NauYALumYPfFDJxd6bl4JhpgoXU5GR1v3u");
+        return Map.of(a.getAdminNumber(),a);
+    }
+
+    public  void addAdmin(Admin admin){adminRepository.save(admin);}
     public void addStudent(Student student){
         studentRepository.save(student);
     }
@@ -38,8 +60,8 @@ public class ProjectService {
     public void addCourse(CourseAndDerection course){
         courseRepository.save(course);
     }
-    public Student getStudent(int id){
-        return studentRepository.findById(id).orElse(null);
+    public Student getStudent(int stuNumber){
+        return studentRepository.findById(stuNumber).orElse(null);
     }
     public CourseAndDerection getCourse(int id){
         return courseRepository.findById(id).orElse(null);
@@ -47,9 +69,11 @@ public class ProjectService {
     public Judge getJudge(int id){
         return judgeRepository.findById(id).orElse(null);
     }
-    public Teacher getTeacher(int id){
-        return teacherRepository.findById(id).orElse(null);
+    public Teacher getTeacher(int tNumber){
+        return map.get(tNumber);
     }
+    public Admin getAdmin(int adminNumber){return map2.get(adminNumber);}
+    //获取植入加权成绩
     public void setAverageGrade(Integer stuID){
         Integer i = 1;
         Integer j = 0;
@@ -81,6 +105,7 @@ public class ProjectService {
        if(flag==1) getStudent(stuID).setAverageGrade(ans/ans1);
        else getStudent(stuID).setAverageGrade(null);
     }
+    //获取植入合格人数
     public void setQualifiedNumber(int tid){
         int i=0;
         int j=1;
@@ -93,6 +118,7 @@ public class ProjectService {
         }
         getTeacher(tid).setQualifiedNumber(i);
     }
+    //排序
     public  Double[] bubbleSort(Double[] grades) {
         if (grades.length == 0)
             return grades;
@@ -105,6 +131,7 @@ public class ProjectService {
                 }
         return grades;
     }
+    //返回合格学生集合
     public List<Student> setQualifiedStudent(int tid){
         Integer k=1,tmp=0;
         Double[] grades = new Double[200];
@@ -136,5 +163,15 @@ public class ProjectService {
             }
         }
         return students;
+    }
+    //教师重置密码
+    public void resetPassword(String Password,Integer tNumber){
+        String newPassword = encoder.encode(Password);
+        getTeacher(tNumber).setPassword(newPassword);
+    }
+    //管理员重置密码
+    public void resetPassword1(String Password,Integer aNumber){
+        String newPassword = encoder.encode(Password);
+        getAdmin(aNumber).setPassword(newPassword);
     }
 }
